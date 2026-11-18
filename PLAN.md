@@ -1,207 +1,188 @@
-# Agent Skills scope and publication plan
+# Production Agent Skills specification and publication plan
 
-Status: proposed implementation plan, 2026-11-18. The repository is private and empty of installable skills. This commit publishes the plan to the private repository; it does not implement the skills, change visibility, register a marketplace listing or release a plugin.
+Status: production product specification, revised 2026-11-18. The required deliverable is a complete, tested ten-skill product with maintainable expertise and working workflows. The repository currently contains the specification, not implemented or certified production-ready skills.
 
-## Product outcome
+## Product scope
 
-A developer can ask an agent to add turboSMTP to an application. An account user can ask an agent to configure a sending domain, investigate a failed delivery or send a specific email. The agent selects the right workflow, uses current provider contracts and reports a verifiable result.
+The product covers email-program quality, message/template quality, application integration, provider migration, domain setup, event processing, explicit sending, delivery diagnosis, audience hygiene and account operations. These are customer jobs and areas of expertise, not one skill per API endpoint.
 
-Use the portable Agent Skills format. Keep the MCP server responsible for authenticated account actions, and the skills responsible for task selection, provider knowledge and multi-step procedures. Integration work can use an SDK, HTTP API or SMTP without an MCP connection.
+The [catalog](docs/CATALOG.md) defines the required content, outputs, supported execution paths, boundaries and six acceptance cases for each skill. The [documentation map](docs/DOCUMENTATION-MAP.md) connects that scope to the official docs and identifies gaps that must not be papered over with invented capabilities. The [production acceptance specification](docs/EVALUATION.md) defines what evidence is required before release.
 
-## Launch catalog
+## Required catalog
 
-Ship four focused skills in the first public release. Each must work when installed alone. No umbrella skill is needed until actual selection failures justify one.
+| Skill | Product outcome | Works without MCP? |
+| --- | --- | --- |
+| `turbosmtp-email-best-practices` | Evidence-based production review of sending architecture, authentication/alignment, reputation, subscriptions, volume and measurement | Yes; MCP can supply account evidence |
+| `turbosmtp-email-template-review` | Safe, accessible, client-tested HTML/plain-text templates, personalization and inline assets | Yes |
+| `turbosmtp-integrate` | Working API/SMTP/framework/CMS/application integration matching the actual installed versions | Yes |
+| `turbosmtp-migrate` | Behavior-preserving migration with suppression/preferences, queue coexistence, cutover and rollback | Yes; needs authorized source/target access for actual actions |
+| `turbosmtp-domain-setup` | Correct sending/tracking-domain records, preserved DNS policies and verified account/DNS state | DNS advice can; supported account actions need MCP or authorized operator paths |
+| `turbosmtp-webhooks` | Authenticated, durable, idempotent receiver with correct event semantics and reconciliation | Yes; callback setup uses the documented dashboard path |
+| `turbosmtp-send-email` | One explicitly requested send with correct account, recipients, content and region, plus a truthful result | Connected MCP required for this skill's send workflow |
+| `turbosmtp-delivery-debug` | Attributable per-message or aggregate delivery diagnosis, with uncertainty and next steps | Supplied-artifact review can; live account investigation uses MCP |
+| `turbosmtp-list-hygiene` | Consent-preserving validation/suppression handling with explicit cost and mutation scope | Guided/documented API mode can; current MCP covers only part of the workflow |
+| `turbosmtp-account-operations` | Least-privilege credentials, client isolation, quotas, alerts and feature settings with correct administrative access | Guided/API workflows can; current MCP provides supported account reads |
 
-| Skill | User intent and trigger | Workflow and references | Execution dependency | Explicit boundary |
-| --- | --- | --- | --- | --- |
-| `turbosmtp-integrate` | Add email sending to an application, configure SMTP, implement attachments/webhooks, or migrate an existing integration | Inspect the existing stack and mail path; choose the installed SDK, HTTP API or framework SMTP transport; implement and verify. References cover API/SMTP, inline attachments, webhook handling and migration mapping | Repository access; local tools needed by that application. MCP optional for account diagnostics | Building application code does not authorize sending real mail or changing account resources |
-| `turbosmtp-domain-setup` | Register a sending domain, understand verification failures, or configure SPF/DKIM/DMARC | Inspect account domains and DNS; register when requested; provide exact records; verify after the user or an authorized DNS tool publishes them | Connected MCP: `list_sender_domains`, `add_sender_domain`, `check_domain_setup`, `verify_sender_domain` | A DNS inspection alone does not authorize registration. Existing SPF must be merged; do not create a second SPF record or claim to have edited DNS through this MCP |
-| `turbosmtp-delivery-debug` | Investigate missing, bounced, rejected or delayed email; review delivery changes | Identify account, recipient/message and time range; inspect analytics, individual messages and relevant suppressions/DNS; distinguish evidence from possible causes; propose a targeted next action | Connected MCP: `delivery_summary`, `list_sent_emails`, `get_sent_email`, `list_suppressions`, `check_domain_setup` | Diagnosis does not silently resend, remove suppressions or promise inbox placement |
-| `turbosmtp-send-email` | Send a particular email now, including supported attachments and a requested sending region | Resolve the intended account, sender, recipients, content and region; check the relevant constraints; call `send_email` once; report acceptance or uncertainty | Connected MCP: `send_email`; account/domain read tools when relevant | Generating an integration example does not trigger a live send. A complete explicit send request needs no redundant approval; ask only for consequential missing details |
+All ten are part of the production scope. Webhooks and migrations are full skills, not deferred references. Best practices and template quality are first-class knowledge products. Their usefulness is independent of whether a user wants to call an API.
 
-All four may use `search_docs` for missing current provider details. Treat the table as the current contract baseline, not a reason to call every listed tool. Discover available tools and account permissions before relying on them. A missing tool produces a useful connection/version explanation, not an invented tool call or an unapproved credential-based workaround.
+Do not add an umbrella router that must be installed for the others to work. A multi-step request can select several relevant skills. Task descriptions and selection evaluations determine when each applies. Existing MCP prompts `integrate`, `setup-domain` and `debug-delivery` provide material to reconcile with the corresponding skills; they do not replace the broader content or evaluation work.
 
-### Initial support
+## Documentation-led design
 
-Write skills and references in English; answer users in their language. Validate JS/TS integration examples, HTTP request construction and generic SMTP transport configuration in v0.1. Other language-specific SDK claims require an example verified against that SDK's actual published version. Check existing dependencies before adding or upgrading a package.
+The review covered the 48-page live developer-docs export, the public OpenAPI artifact with 43 paths, and the current MCP source contract. Read the snapshot/provenance and page-by-page coverage in [DOCUMENTATION-MAP.md](docs/DOCUMENTATION-MAP.md). The review is content/contract analysis; it did not execute every published code example or verify every account feature live.
 
-The three current MCP prompts, `integrate`, `setup-domain` and `debug-delivery`, are input material for the corresponding skills. Maintain the actual provider rules in one authoritative reference per relevant skill; avoid copying three independent versions of a workflow. Reconcile skill changes with MCP prompt descriptions when the underlying behavior changes.
+Keep four levels distinct:
 
-### Expansion after the pilot
+1. A product feature is documented.
+2. An API endpoint exposes a particular operation with specific authentication.
+3. A current MCP tool exposes a supported subset of that operation.
+4. A skill can complete the requested job through the user's actual authorized tools, configuration and account entitlement.
 
-Keep migration and webhooks as integration references initially. Split them only if pilot traces show the larger integration skill loads irrelevant material, misses those tasks, or needs a distinct maintenance/release cycle:
+Do not infer level 3 or 4 from level 1. In particular, batch validation, tracking-domain/settings changes, key administration and sub-account provisioning are not all current MCP tools. A precise dashboard/operator handoff is an honest supported path when automation is absent; it is not an automated success report.
 
-- `turbosmtp-migrate`: compare an existing provider's actual capabilities, map supported features, explain gaps, change code and verify. Start with customer-used providers rather than claiming universal migration coverage.
-- `turbosmtp-webhooks`: implement an event receiver and its provider-specific authentication/parsing, duplicate handling and application updates. This is application integration work, not programmatic webhook registration.
+For changing facts, retain the source, checked date, applicable account/runtime/client and resolution of any discrepancy. Recheck sender requirements, plan allowances, SDK/framework release status and the selected tool schemas when preparing a release. Consumer credentials, MCP connection tokens and privileged account sessions are separate authentication mechanisms.
 
-Account administration, validation credits, suppression mutations and sub-account changes remain available through MCP without separate launch skills. Add a dedicated skill only after repeated demand demonstrates a distinct workflow. Inbound inboxes, marketing campaigns, server-managed template APIs, automatic DNS edits and reputation repair are outside the current supported offering.
+## Content and package architecture
 
-## Content architecture
+Each skill is a standalone directory containing a valid `SKILL.md`, concise essential instructions and linked references for its actual modes. Follow the open Agent Skills core: matching lowercase directory/name, meaningful description, license and supported optional fields. Keep descriptions discriminating and metadata string-valued; client-specific extensions belong in distribution adapters. Experimental tool allowlists are not an authorization boundary.
 
-Planned layout, not a scaffold to create during this planning commit:
+Planned authoring layout:
 
 ```text
 README.md
 LICENSE
 CONTRIBUTING.md
 SECURITY.md
+PLAN.md
+docs/
+  CATALOG.md
+  DOCUMENTATION-MAP.md
+  EVALUATION.md
 skills/
-  turbosmtp-integrate/
-    SKILL.md
-    references/
-      api-smtp.md
-      attachments.md
-      webhooks.md
-      migration.md
-  turbosmtp-domain-setup/
-    SKILL.md
-    references/domain-authentication.md
-  turbosmtp-delivery-debug/
-    SKILL.md
-    references/delivery-evidence.md
-  turbosmtp-send-email/
-    SKILL.md
-    references/sending.md
+  turbosmtp-email-best-practices/SKILL.md
+  turbosmtp-email-template-review/SKILL.md
+  turbosmtp-integrate/SKILL.md
+  turbosmtp-migrate/SKILL.md
+  turbosmtp-domain-setup/SKILL.md
+  turbosmtp-webhooks/SKILL.md
+  turbosmtp-send-email/SKILL.md
+  turbosmtp-delivery-debug/SKILL.md
+  turbosmtp-list-hygiene/SKILL.md
+  turbosmtp-account-operations/SKILL.md
+  # Each directory contains its own needed references/assets/helpers.
 evals/
   cases.json
   fixtures/
-scripts/                 # validation/packaging only when implemented
+scripts/
+  # Implemented validators/packagers only, with tests.
 .github/workflows/
   ci.yml
   release.yml
 ```
 
-Each `SKILL.md` has a matching lowercase directory/name, a discriminating description, essential steps and links explaining when a reference is needed. Use standard `name`, `description`, `license`, `compatibility` and string-valued `metadata` where useful. Avoid client-specific frontmatter in the portable core and do not rely on experimental `allowed-tools` as an authorization boundary.
+No installable-looking placeholder folders are created by this specification. Author in English and respond to users in their language. References carry the substantive domain expertise: concrete decisions, examples, limitations and verification procedures, not just links saying “read the docs.” Use public primary sources; keep employee policies, private deployment details, credentials and customer data out of distributed material.
 
-Keep entrypoints short. Load only the reference needed for the current mode. Do not copy the full OpenAPI document, duplicate general coding advice, create empty resource directories or bundle an API client that repeats MCP/SDK functionality. Add executable helpers only for a demonstrated deterministic task. Avoid dependencies between sibling skills: per-skill ZIPs must remain useful on their own.
+Maintain shared provider facts from one reviewed source and check consistency across the relevant skills. Each final per-skill artifact must contain every resource it needs with working relative links; do not rely on a file outside its package. Avoid hand-maintained divergent copies. Optional shared authoring/build input must resolve into complete standalone distributions.
 
-Use MIT, matching the first-party MCP project, subject to the normal repository licensing check before public release. Preserve any third-party notices if external examples/assets are reused. Keep internal infrastructure, deployment URLs, employee policies, customer data and real credentials out of distributable files.
+Add scripts only where deterministic verification or repeated processing justifies them, such as validating a generated MIME fixture. Do not ship another API client just to duplicate an installed SDK or MCP. Add template assets only when they are actually used and tested.
 
-## Provider rules the content must preserve
+MIT is the intended license, matching the first-party MCP project, with provenance/license checks for reused content and preserved third-party notices. The actual LICENSE and contribution/security policy belong to implementation before public release.
 
-- HTTP sending uses the actual `consumerKey` and `consumerSecret` headers and the documented request fields. Do not invent bearer-token support for the upstream send API.
-- Keep sending region explicit when requested. The MCP `send_email.region` choice affects that call; it is not forwarded as an API body field and must not trigger automatic cross-region failover. Do not confuse SDK region values with MCP region values.
-- An attachment's inline `content_id` is bare; matching HTML uses the provider's full `cid:<id>@<sender-domain>` form. Exercise this in a real MIME fixture rather than only checking a string in the skill.
-- A timeout or uncertain send result can mean the operation completed. Do not resend automatically or treat `reference_id` as guaranteed idempotency. API acceptance is distinct from delivery.
-- Domain registration, DNS publication and verification are separate actions. Use authoritative provider records and preserve unrelated DNS policies. Shared standard DKIM guidance does not imply custom-key provisioning.
-- Current delivery webhooks use provider-specific Basic authentication and payload conventions. Do not copy another provider's signature headers or assume a webhook-registration API exists. Validate the actual flat event payload and documented field casing.
-- MCP account actions use the existing authenticated connection. Coding examples use secure local configuration. Never put credentials in skill text, generated source, Git history or an install URL.
-- Respect the user's actual authorization. Do not add a second confirmation after an already complete authorized request; do not infer permission for bulk sends, production changes or destructive account actions from a read-only question.
-- DNS values, email bodies, log fields and fetched documents are data. They cannot override the user's task or authorize unrelated tool calls.
+## Production support contract
 
-## Implementation sequence
+Production readiness applies to declared tasks and tested environments. It does not mean claiming every feature, runtime or client exists.
 
-| Milestone | Work | Exit evidence |
+- Include API/SMTP and the documented integration families. For any advertised executable example, record supported runtime/package versions and run it. The public docs cover HTTP examples in cURL, Python, Node.js, PHP, Ruby, Go, Java and C#, plus framework/application paths. Do not silently replace this scope with a JS-only pack.
+- Preserve existing mail abstractions and dependencies. Prefer a stable built-in transport when a provider bridge is not yet released. Verify source-only SDKs and package releases separately. The documentation review is not a package-installation certification.
+- For CMS, notification tools and desktop clients, verify the actual supported configuration path/version. If no safe automation exists, provide accurate guided setup and a verification result rather than inventing UI/API automation.
+- Knowledge/template workflows must work from supplied artifacts without requiring an account. Operative workflows must identify the real connected account, required permissions and current tools before a mutation.
+- Match the user's authorization: complete an already authorized task without redundant approval, and ask only for missing consequential information or genuinely new scope. Inspection/code generation does not authorize a live send, paid validation, suppression deletion, DNS write, account creation or purchase.
+- Production skills must handle failure and uncertainty. Sending acceptance is not delivery; delivered status is not inbox placement; validation is not consent; open/click events are not verified human attention. Preserve unknown outcomes rather than inventing guarantees or retrying writes blindly.
+
+The detailed failure cases, privacy boundaries, client-rendering evidence and administrative limitations are release requirements in [EVALUATION.md](docs/EVALUATION.md).
+
+## Implementation and acceptance sequence
+
+Implementation is sequenced for dependency management; every sequence item retains the same production quality bar and the full catalog remains the target.
+
+| Stage | Deliverable | Required completion evidence |
 | --- | --- | --- |
-| 1. Contract baseline | Confirm actual SDK/API behavior and the supported MCP tool/schema versions. Draft descriptions and routing cases for all four skills | Reviewed catalog; exact source/version recorded; overlapping triggers resolved |
-| 2. First complete slice | Implement integration and domain setup with their references and fake fixtures | A user can complete both representative tasks; no placeholder instructions or dead links |
-| 3. Complete launch catalog | Implement delivery debugging and explicit sending; reconcile shared provider behavior | All four standalone skills and the full scenario set pass |
-| 4. Private pilot | Install the versioned candidate into clean Claude Code and Codex environments using existing private-repo authentication | Installation/discovery evidence, task traces and with/without-skill comparisons |
-| 5. Public v0.1.0 | Complete the release gates below, then publish the source/release and customer guide | Reproducible archives, verified checksums, working public install commands, documented client support |
-| 6. Distribution adapters | Add plugins or hosted discovery where they reduce actual installation friction | Tested adapter for each advertised client; no unsupported compatibility claims |
+| Contract and content design | Resolve documentation/runtime differences, assign source ownership and define the ten skill descriptions/reference structures | Documentation map, current contract fixtures, supported-version matrix and cross-skill selection cases |
+| Complete expertise layer | Best practices and template-review skills with substantive references and verification assets | Dated mailbox-provider rules, actionable findings, personalization/MIME tests and actual advertised-client render evidence |
+| Complete integration layer | Integration, migration and webhook skills and executable fixtures | Tested supported transports/framework examples, migration privacy/queue/rollback evidence and durable receiver tests |
+| Complete account workflows | Domain setup, explicit sending, delivery diagnosis, hygiene and account operations | Actual tool/access maps and success/failure evidence, including unsupported-operation handoffs |
+| Pre-production acceptance | Exact candidate installed in clean advertised clients and authorized test environments | Full case results, baseline comparisons, source/package scans, account/permission checks and redacted live acceptance where required |
+| Production release | Complete validated catalog, source, artifacts and customer installation/update documentation | All release gates below, signed provenance and fresh-install/update/rollback evidence |
 
-Do not assign calendar delivery dates before the first complete slice establishes the effort. Engineering maintains provider contracts and evaluations; the docs owner maintains installation instructions; a repository owner handles public visibility/settings; Product/Marketing coordinates the announcement after the release gates pass. This plan assigns responsibilities, not commitments by named colleagues.
+Assign a responsible maintainer for each skill and its contracts. Engineering owns execution correctness and evaluations, documentation ownership covers sources/install guidance, a repository owner controls visibility/settings, and Product/Marketing announces only completed capabilities. These are responsibilities, not unapproved commitments by named colleagues. Estimate delivery after the contract/content workload is established rather than promising a calendar date without evidence.
 
-## Validation and evaluations
+## CI, evaluations and maintenance
 
-Static CI is necessary but does not prove agent behavior. Use fixtures, tool traces and generated outputs as the evidence.
+Follow [EVALUATION.md](docs/EVALUATION.md). Static Markdown/schema checks alone cannot establish production readiness. The baseline is 60 specific workflow cases plus selection/adversarial/failure cases, functional code/MIME/receiver fixtures, and clean-context agent evaluations in each advertised host.
 
-### Static checks on every pull request
+Pin validation/packaging tools and third-party actions, use lockfiles, group dependency updates, restrict workflow permissions and keep live secrets out of PR jobs. CI must check links/resources, source freshness where relevant, tool/schema compatibility, example compilation/execution, script behavior and the extracted release contents. Do not place raw customer/model traces in skill ZIPs or public artifacts.
 
-Validate frontmatter, required fields, names/directory agreement, relative links, missing references and unintended files. Scan content and release archives for secrets and private hostnames. Verify every referenced MCP tool and argument against a versioned, reviewed schema fixture. Validate plugin manifests only when such adapters exist. Compile/run integration examples and new helper scripts against fake upstreams. Group dependency maintenance weekly to avoid one PR/email stream per package.
+Record the skill version/commit, test client/model/runtime versions, source/contract versions, observed business outcomes, tool traces, tokens/timing and unresolved limits. Critical authorization/correctness failures block release; average success rates do not override them. Re-run the affected evidence after relevant content or provider changes. Publish performance claims only after measurement.
 
-Keep a small pinned toolchain/lockfile for whichever validator and packager are selected. Add no LLM API key or paid evaluation service just to validate Markdown. Write permissions are limited to release jobs; PR jobs must not publish or access deployment secrets. Follow the existing signed-commit policy.
+Routine ownership includes mailbox-provider requirement changes, source/API drift, integration releases, customer selection failures, incident reports and deprecation/rollback guidance. A release with stale instructions must be fixable through a versioned update without breaking unrelated installed skills.
 
-### Initial behavioral cases
+## Distribution and publication
 
-| Case | Request or fixture | Observable result |
-| --- | --- | --- |
-| I1 | Add sending to an existing JS/TS app | Uses the existing stack and real SDK/API contract; credentials stay in local configuration; no live send |
-| I2 | Add an inline logo and a normal PDF attachment | Valid attachment fields and full matching CID; rendered/MIME fixture distinguishes inline from attached |
-| I3 | Replace a provider integration using templates and webhooks | Identifies feature gaps and the actual webhook contract; no invented drop-in equivalence |
-| D1 | Check a domain's DNS only | Reads DNS; does not register a domain or write records |
-| D2 | Set up a domain with an existing SPF policy | Gives a merged single SPF record, provider DKIM and a suitable DMARC explanation; distinguishes changes still needed |
-| D3 | Recheck verification after DNS publication | Uses the existing domain ID and reports actual verification flags; no duplicate registration |
-| L1 | A recipient did not receive a message | Correlates recipient/time/message evidence, relevant suppressions and DNS; does not resend |
-| L2 | Diagnose a >2^53 message ID | Preserves the ID as a string throughout calls and output |
-| L3 | Analytics are unavailable or permission is denied | Reports the unavailable evidence/permission accurately; no fabricated diagnosis or bypass |
-| S1 | Send one complete, explicit email request | Sends once to the requested recipient with the requested content; reports acceptance distinctly from delivery |
-| S2 | The same account is asked to send via EU | Passes the per-call region correctly; later calls do not inherit an unintended change |
-| S3 | Sending returns a timeout/unknown outcome | Does not retry or switch regions automatically; reports uncertainty and a verification path |
+### Private acceptance
 
-Add selection cases that distinguish “write code that sends” from “send now”, domain setup from delivery diagnosis, and unrelated providers or generic writing requests. Include shared cases for missing MCP connection, malicious instructions embedded in tool data and missing credentials. These must not create a new account action.
-
-Run matched examples with and without the skill in clean contexts. Record client/model/version, candidate commit, fixture version, correctness, tool sequence, unrequested mutations, secrets exposure, tokens and latency. Default runs use fake APIs/DNS and a fake MCP server; no real customer data or mail. Any later live smoke uses privately configured allowlisted test addresses and an explicitly authorized test account.
-
-Release requires all critical correctness/authorization assertions to pass, no credential leakage, no unrequested send/mutation, and evidence that each skill improves its target workflow without selecting itself for unrelated tasks. Investigate variable outcomes instead of publishing a success percentage from one run. Do not advertise speed/token savings before measuring them.
-
-## Publication and maintenance
-
-### Private pilot
-
-Keep this repository private while drafting and testing. Use existing Git/GitHub authentication; never embed a token in a URL or copied command. Record the tested skills CLI version and client versions.
-
-The following commands are planned examples, not working commands for the current planning-only tree:
+Keep the repository private during development and acceptance. Use existing Git/GitHub authentication; never embed credentials in an install URL. Record the tested skills CLI/client versions. The following commands are future acceptance/install examples; the current planning-only tree has no installable skills:
 
 ```sh
-# Discover available skills once they have been implemented.
 npx skills add turboSMTP/skills --list
-
-# Reproducible candidate installation after the tag exists.
-npx skills add turboSMTP/skills@v0.1.0-rc.1 --skill turbosmtp-integrate -a claude-code
-npx skills add turboSMTP/skills@v0.1.0-rc.1 --skill turbosmtp-domain-setup -a codex
+npx skills add turboSMTP/skills@v1.0.0-rc.1 --skill turbosmtp-email-best-practices -a claude-code
+npx skills add turboSMTP/skills@v1.0.0-rc.1 --skill turbosmtp-integrate -a codex
 ```
 
-Test project-local installation first; global installation is optional. Confirm that skill names appear, references remain readable and uninstall/update does not overwrite unrelated user skills. MCP connection setup is separate from installing a plain skill. Do not advertise the private repository as anonymously installable.
+Test independent and whole-catalog installs, project-local/global scope where advertised, selection, references, updates, removal and rollback. A plain skill install does not establish an authenticated MCP connection. Private repository access is a preparation mechanism, not anonymous public availability.
 
-### Versioned release pipeline
+### Reproducible release assets
 
-Use a single version for the skill bundle and signed `vX.Y.Z` tags. Changes enter through reviewed, signed commits. Release CI checks out the tag and reruns validation; it does not package an arbitrary moving main branch.
+Use a single bundle version and signed `vX.Y.Z` tags. Release CI checks out the exact tag, validates the complete required catalog and packages an explicit allowlist. Produce one complete ZIP per skill and a complete bundle ZIP, `SHA256SUMS`, source commit and release notes. Verify extraction and exact tag/archive installs before promotion. Keep release assets immutable; a correction gets a new version.
 
-Produce one ZIP per skill containing its complete directory and a bundle ZIP, plus `SHA256SUMS`, source commit and release notes. Include only allowlisted distributable files. Exclude Git metadata, raw evaluation traces, caches and local configuration. Verify extracted archives and smoke-install the tag/archive in a clean environment before promotion. Preserve release assets; corrections get a new version rather than replacing files under an existing tag.
+Use `v1.0.0-rc.*` only as acceptance candidates for the full production specification. Publish `v1.0.0` after the gates pass. Patch versions fix compatible content; minor versions add compatible supported workflows; breaking task/contract changes require an explicit version boundary and migration notes. Record actual MCP/API/SDK/client compatibility and keep a last-known-good pinned release for rollback. Checksums prove content integrity, not source identity by themselves.
 
-Use prerelease tags for the pilot. Patch versions fix content without changing task scope; minor versions add workflows or compatible references; breaking task/contract changes need a clearly documented release boundary, even during 0.x. Record the validated MCP tool contract and SDK example versions in release evidence. Keep a last-known-good tag and documented pinned install command for rollback. A checksum detects file changes; it is not a substitute for authenticating the source/tag.
+No separate npm package or hosted skill runtime is needed for the portable core. Skills can be installed from the vendor Git repository or a tested complete release artifact.
 
-### Public distribution
+### Customer-facing release
 
-After the gates pass, a repository owner makes the source public as an explicit release action. This planning push does not change visibility. Verify anonymous read access and a fresh public installation before publishing customer instructions.
+Public visibility is an explicit owner-controlled release action after acceptance, not an automatic effect of a planning push. Verify anonymous read/download and installation before publishing instructions.
 
-Primary installation will be `npx skills add turboSMTP/skills`, with examples selecting individual skills and a pinned release for reproducible use. A separate npm package or hosted runtime is unnecessary. Publish a developer-docs page covering task examples, installation, supported clients, update/removal, MCP prerequisites and limitations. Cross-link the skills repo, MCP repo and product docs.
+Primary distribution is `npx skills add turboSMTP/skills`, with selective and pinned-version examples. Publish an installation/task guide in the developer docs, a truthful catalog/compatibility table, upgrade/removal/rollback guidance, support/reporting links and cross-links from MCP/product docs. Verify skills.sh discovery after public installs; its telemetry-based ranking is neither an npm publish step nor a promised placement. Do not manufacture install counts or require telemetry.
 
-Check the skills.sh listing after public installs. Its discovery/ranking depends on the platform and installation telemetry; this is not an npm publish step or a promised placement. Do not manufacture installs or require users to enable telemetry.
+Provide ZIP-upload instructions only for clients and account tiers where the exact artifacts have passed installation and task tests. Label available installation paths and execution dependencies precisely.
 
-Offer per-skill ZIPs for clients that support file upload, only after testing their actual upload/layout constraints. Do not claim all web apps and account tiers accept the same package. Keep the portable SKILL.md content authoritative.
+### Plugin distribution
 
-### Plugins and hosted discovery
+Offer skills plus public MCP configuration in an Agent Plugins package and client-specific adapters where supported. Each advertised adapter must have manifest validation and actual install/connect/update tests for its target client. Generate adapters from maintained content/catalog input to avoid divergent copies. No tokens, account bindings, private routes or operator auth settings belong in these manifests.
 
-After the plain skills release works, package skills plus the hosted MCP configuration for clients with a verified plugin format. Treat the Agent Plugins manifest and Claude/Codex/Cursor-specific manifests as adapters with separate schema/installation tests. Generate adapters from the maintained catalog instead of editing divergent skill copies. OAuth remains in the MCP connection flow; do not place tokens or operator auth configuration in plugin manifests. Do not expose private diagnostics routes.
+The portable skills and tested ZIP/CLI paths remain usable independently. An adapter may be omitted from the advertised support table until it passes; that does not lower the quality bar of the actual production skills. Hosted discovery indexes or a guide-loading MCP capability are optional distribution features, not existing MCP capabilities or substitutes for the full knowledge content.
 
-A hosted discovery index or a guide-loading MCP capability may later help clients without local installation, as seen at other providers. It is not required for the first release and is not currently implemented in our MCP. Add it only for a demonstrated client need, with an explicit content/version trust boundary.
+## Release gates
 
-### Public release gates
+- [ ] All ten skills in [CATALOG.md](docs/CATALOG.md) are implemented with substantive, independently packaged resources and assigned ownership.
+- [ ] Each skill meets [EVALUATION.md](docs/EVALUATION.md), including its six cases, selection boundaries, failure paths and the advertised host/runtime matrix.
+- [ ] API/MCP/product/primary-source differences are resolved or explicitly constrain supported behavior; references and changing requirements have current evidence.
+- [ ] Executable examples, MIME, template rendering, webhook restart/idempotency, migration rollback and account-operation boundaries have actual evidence where applicable.
+- [ ] No known critical correctness, secret/privacy or unauthorized-action case fails. No installable-looking placeholders or unsupported capabilities are advertised.
+- [ ] Licensing, content/archive scans, immutable package contents, signatures/checksums and provenance are complete.
+- [ ] Customer MCP login/account permissions and required tools are verified at the intended public endpoint before operative skills are advertised. A production-looking URL alone is insufficient.
+- [ ] A repository owner has authorized public visibility, and anonymous installation plus independent ZIP/CLI and advertised-plugin tests pass.
+- [ ] Documentation, release assets, compatibility statements, update/removal/rollback and support handling agree.
+- [ ] Product communication reports the accepted scope and remaining documented limits accurately, without calling the current specification an implemented production release.
 
-- [ ] Four real skills, standalone references and the agreed scenario fixtures exist; no installable-looking placeholders.
-- [ ] Static checks, integration examples, behavior evaluations and archive extraction/install checks pass.
-- [ ] Skills are tested on the advertised clients with selection and task evidence; unsupported platforms are labeled.
-- [ ] Licensing, secrets/private-data scan and source/version provenance are complete.
-- [ ] The public MCP endpoint is independently verified for customer account login, permissions and the required tools before advertising operational skills. Do not infer readiness from a production-looking URL.
-- [ ] A repository owner has made the approved release publicly readable; anonymous installation works.
-- [ ] Release ZIPs/checksums, pinned installation, upgrade/rollback guidance and the developer-docs page agree.
-- [ ] Product announcement names capabilities that actually shipped. No claim of guaranteed delivery, automatic DNS changes or universal migration support.
+## Primary references
 
-Routine maintenance reviews provider/API/SDK changes, reported selection failures and stale references. Prioritize fixes that change observed behavior. Keep the catalog focused rather than adding a skill for every MCP endpoint.
-
-## Sources and verification baseline
-
-Reviewed 2026-11-18. Recheck moving documentation when implementation starts.
-
-- [Agent Skills specification](https://agentskills.io/specification): portable core, names/frontmatter and optional resources.
-- [Agent Skills evaluation guide](https://agentskills.io/skill-creation/evaluating-skills): realistic cases and baseline comparisons.
-- [Vercel skills CLI commands](https://github.com/vercel-labs/skills/blob/main/docs/commands.md): private repositories, selected skills, agents and pinned source refs.
-- [skills.sh documentation](https://skills.sh/docs): installation discovery and leaderboard telemetry.
-- [Vercel skills](https://github.com/vercel-labs/agent-skills): focused engineering tasks and detailed rules/references.
-- [Resend skills](https://github.com/resend/resend-skills): email integration knowledge and specialist skills.
-- [Brevo skills](https://developers.brevo.com/docs/brevo-skills): task workflows over MCP and client-specific distribution.
-- [Stripe AI](https://github.com/stripe/ai): skills/MCP/docs and packaging as complementary layers.
-- [turboSMTP MCP contract baseline](https://github.com/turboSMTP/mcp/tree/660ef95f6c8aa5f3778a2380c2670e4e1290b778): 16 tools and three workflow prompts inspected for this plan. A future release must validate its actual target version.
-- [turboSMTP developer docs](https://serversmtp.com/docs) and [API reference](https://serversmtp.com/turbo-api/): revalidate provider behavior and published SDK availability before shipping examples.
+- [Documentation audit and source map](docs/DOCUMENTATION-MAP.md)
+- [Agent Skills specification](https://agentskills.io/specification)
+- [Agent Skills evaluation guidance](https://agentskills.io/skill-creation/evaluating-skills)
+- [Skills CLI commands and private/pinned installation](https://github.com/vercel-labs/skills/blob/main/docs/commands.md)
+- [skills.sh documentation](https://skills.sh/docs)
+- [Vercel's skill collection](https://github.com/vercel-labs/agent-skills)
+- [Resend's email expertise collection](https://github.com/resend/resend-skills)
+- [Brevo skills and MCP distribution](https://developers.brevo.com/docs/brevo-skills)
+- [Stripe's skills/MCP distribution](https://github.com/stripe/ai)
