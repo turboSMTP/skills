@@ -4,7 +4,7 @@ Give a coding agent instructions for integrating turboSMTP, reviewing email qual
 
 ## Install
 
-From your project directory, run the installer and choose your skills and agents. Access to the private repository uses your existing Git credentials.
+From your project directory, run the installer and choose your skills and agents.
 
 ```sh
 npx skills add turboSMTP/skills
