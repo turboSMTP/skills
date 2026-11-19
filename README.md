@@ -1,10 +1,10 @@
 # turboSMTP Agent Skills
 
-Give a coding agent instructions for integrating turboSMTP, reviewing email quality and working with a sending account. Each skill can be installed individually. A template review or code integration works locally. Sending through the agent requires a connected turboSMTP MCP account.
+Use turboSMTP with any agent that supports the [Agent Skills format](https://agentskills.io/specification). The skills guide your agent through email integration, message review and account operations. Each skill can be installed individually. A template review or code integration works locally. Sending through the agent requires a connected turboSMTP MCP account.
 
 ## Install
 
-From your project directory, run the installer and choose your skills and agents.
+From your project directory, run the interactive installer and choose your skills and agents. See the [supported agents and installation paths](https://github.com/vercel-labs/skills/blob/main/docs/agents.md) for client-specific setup.
 
 ```sh
 npx skills add turboSMTP/skills
