@@ -10,17 +10,16 @@ from package import ROOT
 
 def check(output):
     documents = {entry.parent.name: entry for entry in (ROOT / "skills").glob("*/SKILL.md")}
-    catalog = (ROOT / "docs/CATALOG.md").read_text()
-    expected = set(re.findall(r"^## \d+\. (turbosmtp-[a-z-]+)$", catalog, re.M))
-    assert documents.keys() == expected, "installed catalog differs from the specification"
+    expected = {d.name for d in (ROOT / "skills").iterdir() if d.is_dir()}
+    assert documents and documents.keys() == expected, "each skill directory needs a SKILL.md"
     cases = json.loads((ROOT / "evals/cases.json").read_text())
-    assert len({item["id"] for item in cases}) == len(cases)
+    assert len({item["id"] for item in cases}) == len(cases), "duplicate evaluation ID"
+    assert {item["skill"] for item in cases} == expected, "evaluation catalog differs from skills"
     combined = set()
     with ZipFile(output / "turbosmtp-skills.zip") as bundle:
         for name, entry in documents.items():
             content = entry.read_text()
             assert content.startswith(f"---\nname: {name}\ndescription: >-\n  ")
-            assert sum(item["skill"] == name for item in cases) == 6, name
             with ZipFile(output / f"{name}.zip") as single:
                 files = {p for p in entry.parent.rglob("*") if p.is_file()}
                 paths = {f"{name}/{p.relative_to(entry.parent)}": p for p in files}

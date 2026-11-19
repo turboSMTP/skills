@@ -1,6 +1,8 @@
-# Private acceptance record
+# Evaluating the skills
 
-The checkout contains ten installable skills. Maintainers can build ten standalone ZIPs, the catalog ZIP and SHA256SUMS with Python 3.11 or newer. CI uploads these as private workflow artifacts. This record covers checks on 2026-11-19.
+Use [cases.json](cases.json) to evaluate skill selection and behavior. In a clean project, give an agent the prompt without the expected result or skill name. Record the selected skill, actions and output. Compare with the expected outcome and a fresh run without the skill. Use synthetic inputs and a fake transport for account operations. Record client version, model and source commit so reviewers can repeat a result.
+
+## Checks on 2026-11-19
 
 | Exercise | Result |
 | --- | --- |
@@ -24,4 +26,4 @@ The checkout contains ten installable skills. Maintainers can build ten standalo
 | Uploaded CSV and a valid but unsubscribed contact | List hygiene | Kept the opt-out and recognized the cost boundary between uploading and starting validation. |
 | Change the label of an IP-restricted key | Account operations | Preserved the existing complete permission and egress restrictions on update. |
 
-The 60 cases in [the evaluation set](../evals/cases.json) are inputs and expected outcomes. The ten qualitative trials above cover a subset and lack a matched no-skill baseline. The installed paths were checked locally. Full client sessions, independent actual email-client rendering, generated-code runtime tests, live authorized account acceptance and a tagged public release still require evidence under [the evaluation specification](EVALUATION.md).
+The 60 cases in [the evaluation set](cases.json) are inputs and expected outcomes. The ten qualitative trials above cover a subset and lack a matched no-skill baseline. The installed paths were checked locally. Full client sessions, independent actual email-client rendering, generated-code runtime tests, live authorized account acceptance and a tagged public release still require evidence before a production release.
