@@ -67,4 +67,4 @@ The release report names every included skill, supported clients/runtimes, API/M
 
 ## Definition of production ready
 
-A skill is production ready only for its explicitly tested tasks and environments when all required evidence above exists, every critical case passes, operational failure paths are useful, instructions are maintainable and the exact distributed package installs/updates correctly. There is no “production ready” label for the current planning-only repository.
+A skill is production ready only for its explicitly tested tasks and environments when all required evidence above exists, every critical case passes, operational failure paths are useful, instructions are maintainable and the exact distributed package installs/updates correctly. Record actual results in [acceptance evidence](ACCEPTANCE.md).

@@ -1,0 +1,362 @@
+[
+  {
+    "id": "BP1",
+    "skill": "turbosmtp-email-best-practices",
+    "prompt": "Our password resets and weekly newsletters use one stream. Review our plan before launch.",
+    "expected": "audit a mixed transactional/newsletter program"
+  },
+  {
+    "id": "BP2",
+    "skill": "turbosmtp-email-best-practices",
+    "prompt": "We send 30 order confirmations a day. Which receiver requirements apply?",
+    "expected": "review a low-volume transactional service without imposing irrelevant bulk rules"
+  },
+  {
+    "id": "BP3",
+    "skill": "turbosmtp-email-best-practices",
+    "prompt": "The SPF check passes for another return-path domain. Does that prove DMARC?",
+    "expected": "detect SPF pass with unaligned identity"
+  },
+  {
+    "id": "BP4",
+    "skill": "turbosmtp-email-best-practices",
+    "prompt": "Our newsletter has a footer link. How do I check one-click unsubscribe?",
+    "expected": "distinguish a body unsubscribe link from the applicable one-click mechanism"
+  },
+  {
+    "id": "BP5",
+    "skill": "turbosmtp-email-best-practices",
+    "prompt": "Opens doubled immediately after a mailbox client update. Did readership double?",
+    "expected": "explain open-rate inflation without claiming human engagement"
+  },
+  {
+    "id": "BP6",
+    "skill": "turbosmtp-email-best-practices",
+    "prompt": "The customer opted out, but their address is valid. Can we send promotional offers?",
+    "expected": "reject a request to bypass opt-outs or promise compliance/inbox placement"
+  },
+  {
+    "id": "TM1",
+    "skill": "turbosmtp-email-template-review",
+    "prompt": "A receipt shows the amount only inside a PNG. Repair the email.",
+    "expected": "repair an image-only receipt with a text alternative"
+  },
+  {
+    "id": "TM2",
+    "skill": "turbosmtp-email-template-review",
+    "prompt": "Our main call to action vanishes with images disabled. Review the template.",
+    "expected": "preserve layout and links when images are blocked"
+  },
+  {
+    "id": "TM3",
+    "skill": "turbosmtp-email-template-review",
+    "prompt": "A contact's first name contains HTML markup. Render the greeting safely.",
+    "expected": "escape an injected personalization value"
+  },
+  {
+    "id": "TM4",
+    "skill": "turbosmtp-email-template-review",
+    "prompt": "Our reset template sometimes has no reset URL. What should happen?",
+    "expected": "resolve a missing variable before release"
+  },
+  {
+    "id": "TM5",
+    "skill": "turbosmtp-email-template-review",
+    "prompt": "The logo appears as a separate attachment next to the invoice. Fix our message.",
+    "expected": "distinguish inline CID assets from normal attachments"
+  },
+  {
+    "id": "TM6",
+    "skill": "turbosmtp-email-template-review",
+    "prompt": "Please review this email draft for Outlook. I only have the source HTML.",
+    "expected": "generate a review without a live send or fabricated rendering results"
+  },
+  {
+    "id": "IN1",
+    "skill": "turbosmtp-integrate",
+    "prompt": "Wire our JS app to the turboSMTP JSON send endpoint with fake configuration.",
+    "expected": "integrate HTTP with both Consumer headers"
+  },
+  {
+    "id": "IN2",
+    "skill": "turbosmtp-integrate",
+    "prompt": "Our existing mailer uses port 587. Which TLS and login settings should we use?",
+    "expected": "configure SMTP with required STARTTLS and certificate checks"
+  },
+  {
+    "id": "IN3",
+    "skill": "turbosmtp-integrate",
+    "prompt": "We already use Swoosh. How do we configure our installed version?",
+    "expected": "use an existing supported framework transport"
+  },
+  {
+    "id": "IN4",
+    "skill": "turbosmtp-integrate",
+    "prompt": "The Symfony adapter is missing in our installed version. Wire up email.",
+    "expected": "choose a stable alternative to an unavailable bridge"
+  },
+  {
+    "id": "IN5",
+    "skill": "turbosmtp-integrate",
+    "prompt": "Configure EU sending for my WordPress installation using a new restricted key.",
+    "expected": "preserve a requested EU route and configured key permissions"
+  },
+  {
+    "id": "IN6",
+    "skill": "turbosmtp-integrate",
+    "prompt": "Our send client times out after transmitting. Implement appropriate error handling.",
+    "expected": "handle an uncertain result without retrying/switching providers automatically"
+  },
+  {
+    "id": "MG1",
+    "skill": "turbosmtp-migrate",
+    "prompt": "Convert one SendGrid v3 personalization into a turboSMTP API message.",
+    "expected": "map one SendGrid personalization"
+  },
+  {
+    "id": "MG2",
+    "skill": "turbosmtp-migrate",
+    "prompt": "Each SendGrid recipient has a different coupon. Convert this sending job.",
+    "expected": "preserve privacy and per-recipient substitutions across several messages"
+  },
+  {
+    "id": "MG3",
+    "skill": "turbosmtp-migrate",
+    "prompt": "Move Mailgun form uploads to EU HTTP sending and preserve inline assets.",
+    "expected": "convert Mailgun form-data/Basic auth to the documented JSON/header contract"
+  },
+  {
+    "id": "MG4",
+    "skill": "turbosmtp-migrate",
+    "prompt": "We have list-specific opt-outs. How do we preserve those during cutover?",
+    "expected": "carry opt-outs with their correct scope"
+  },
+  {
+    "id": "MG5",
+    "skill": "turbosmtp-migrate",
+    "prompt": "Move the signed callback handler and preserve numeric ID 9007199254740993.",
+    "expected": "adapt webhook authentication/events and large IDs"
+  },
+  {
+    "id": "MG6",
+    "skill": "turbosmtp-migrate",
+    "prompt": "Abort our migration after mixed results while the old provider still has queued mail.",
+    "expected": "abort/roll back on a failed acceptance checkpoint without duplicate sends or premature DNS cleanup"
+  },
+  {
+    "id": "DN1",
+    "skill": "turbosmtp-domain-setup",
+    "prompt": "Check our sending-domain DNS. I only want a diagnosis.",
+    "expected": "inspect DNS without a write"
+  },
+  {
+    "id": "DN2",
+    "skill": "turbosmtp-domain-setup",
+    "prompt": "We already have one SPF record for two providers. Add turboSMTP safely.",
+    "expected": "merge existing SPF without authorizing unrelated hosts"
+  },
+  {
+    "id": "DN3",
+    "skill": "turbosmtp-domain-setup",
+    "prompt": "Our DNS zone is example.com but the sender is mail.eu.example.com. Where does DKIM go?",
+    "expected": "place DKIM correctly for a nested subdomain"
+  },
+  {
+    "id": "DN4",
+    "skill": "turbosmtp-domain-setup",
+    "prompt": "Our subdomain inherits a parent DMARC policy. Should we change it?",
+    "expected": "respect effective DMARC alignment/policy before proposing enforcement"
+  },
+  {
+    "id": "DN5",
+    "skill": "turbosmtp-domain-setup",
+    "prompt": "I already registered this domain. Recheck its verification.",
+    "expected": "verify an existing domain without duplicate registration"
+  },
+  {
+    "id": "DN6",
+    "skill": "turbosmtp-domain-setup",
+    "prompt": "Set up a branded tracking link. Can I reuse the sending DKIM record or change PTR?",
+    "expected": "explain tracking-domain CNAMEs/PTR ownership without claiming unsupported MCP writes"
+  },
+  {
+    "id": "WH1",
+    "skill": "turbosmtp-webhooks",
+    "prompt": "Implement parsing for authenticated, chunked turboSMTP JSON callbacks.",
+    "expected": "accept authenticated chunked JSON"
+  },
+  {
+    "id": "WH2",
+    "skill": "turbosmtp-webhooks",
+    "prompt": "Our receiver trusts any request with an event ID. Correct its authentication.",
+    "expected": "reject missing/wrong receiver authentication"
+  },
+  {
+    "id": "WH3",
+    "skill": "turbosmtp-webhooks",
+    "prompt": "Parse Timestamp and timestamp and keep the numeric mid 9007199254740993.",
+    "expected": "handle `Timestamp`/`timestamp` and large IDs"
+  },
+  {
+    "id": "WH4",
+    "skill": "turbosmtp-webhooks",
+    "prompt": "A click and an unsubscribe share a mid. Our job drops the second event.",
+    "expected": "distinguish duplicate callbacks from different events on the same message"
+  },
+  {
+    "id": "WH5",
+    "skill": "turbosmtp-webhooks",
+    "prompt": "The worker crashed after queueing the callback but before acknowledgment. Test recovery.",
+    "expected": "durably accept before acknowledgment and survive an application restart"
+  },
+  {
+    "id": "WH6",
+    "skill": "turbosmtp-webhooks",
+    "prompt": "OPENED arrived before DELIVERED, and another callback was lost. How do we reconcile?",
+    "expected": "process out-of-order events and reconcile an exhausted callback retry through analytics"
+  },
+  {
+    "id": "SE1",
+    "skill": "turbosmtp-send-email",
+    "prompt": "Send the supplied receipt once to buyer@example.org from orders@example.com in the test account.",
+    "expected": "send one complete explicit request exactly once"
+  },
+  {
+    "id": "SE2",
+    "skill": "turbosmtp-send-email",
+    "prompt": "Send this receipt from our account. I forgot to tell you who should receive it.",
+    "expected": "request a genuinely missing recipient/account"
+  },
+  {
+    "id": "SE3",
+    "skill": "turbosmtp-send-email",
+    "prompt": "Send this one EU email, then use the connection default on the next request.",
+    "expected": "honor EU for that call only"
+  },
+  {
+    "id": "SE4",
+    "skill": "turbosmtp-send-email",
+    "prompt": "Send this invoice with an inline logo and the supplied BCC address.",
+    "expected": "preserve BCC/privacy and inline/normal attachments"
+  },
+  {
+    "id": "SE5",
+    "skill": "turbosmtp-send-email",
+    "prompt": "This attachment is 24 MB before encoding. Send the message with the file.",
+    "expected": "reject an oversized/invalid request before sending"
+  },
+  {
+    "id": "SE6",
+    "skill": "turbosmtp-send-email",
+    "prompt": "The send tool returned outcome_unknown. What do we do about this exact message?",
+    "expected": "handle timeout/unknown outcome without automatic resend or region failover"
+  },
+  {
+    "id": "DE1",
+    "skill": "turbosmtp-delivery-debug",
+    "prompt": "Yesterday a receipt never reached buyer@example.org. Find the account evidence.",
+    "expected": "correlate recipient/time/message evidence"
+  },
+  {
+    "id": "DE2",
+    "skill": "turbosmtp-delivery-debug",
+    "prompt": "Find the status of message 9007199254740993 without changing its ID.",
+    "expected": "preserve an ID above JavaScript's safe range"
+  },
+  {
+    "id": "DE3",
+    "skill": "turbosmtp-delivery-debug",
+    "prompt": "Was the message dropped due to a suppression or deferred by the receiver?",
+    "expected": "explain a suppressed versus deferred message"
+  },
+  {
+    "id": "DE4",
+    "skill": "turbosmtp-delivery-debug",
+    "prompt": "Explain why the API says SUCCESS but the webhook reported DELIVERED.",
+    "expected": "distinguish analytics statuses from webhook names"
+  },
+  {
+    "id": "DE5",
+    "skill": "turbosmtp-delivery-debug",
+    "prompt": "No records appear for last year and I only have 30 days of history. Diagnose this.",
+    "expected": "report an incomplete window/denominator or missing permission honestly"
+  },
+  {
+    "id": "DE6",
+    "skill": "turbosmtp-delivery-debug",
+    "prompt": "A tracking link was clicked seconds after acceptance. Can we identify a human reader?",
+    "expected": "identify privacy-proxy/link-scanner effects without changing tracking settings"
+  },
+  {
+    "id": "HY1",
+    "skill": "turbosmtp-list-hygiene",
+    "prompt": "Review this small mixed address list offline and summarize issues.",
+    "expected": "classify a small mixed list without sending"
+  },
+  {
+    "id": "HY2",
+    "skill": "turbosmtp-list-hygiene",
+    "prompt": "This validated contact unsubscribed last week. Can it go on our sendable list?",
+    "expected": "keep consent separate from a `valid` result"
+  },
+  {
+    "id": "HY3",
+    "skill": "turbosmtp-list-hygiene",
+    "prompt": "How should we handle catch_all, unknown and invalid in these results?",
+    "expected": "explain catch-all/unknown results"
+  },
+  {
+    "id": "HY4",
+    "skill": "turbosmtp-list-hygiene",
+    "prompt": "We uploaded the CSV but have not approved spending credits. What is its state?",
+    "expected": "distinguish upload from an authorized paid validation start"
+  },
+  {
+    "id": "HY5",
+    "skill": "turbosmtp-list-hygiene",
+    "prompt": "Migrate this complaint and a topic-specific opt-out into our hygiene process.",
+    "expected": "preserve complaint/unsubscribe scope on import/removal"
+  },
+  {
+    "id": "HY6",
+    "skill": "turbosmtp-list-hygiene",
+    "prompt": "Batch validation timed out and the balance looks lower. Reconcile the job.",
+    "expected": "handle credit/permission/unknown-result failures without purchasing, deleting or spending again automatically"
+  },
+  {
+    "id": "AC1",
+    "skill": "turbosmtp-account-operations",
+    "prompt": "My HTTP key works from my laptop but fails in production. Check permission and IP scope.",
+    "expected": "identify a sending permission/IP problem without exposing secrets"
+  },
+  {
+    "id": "AC2",
+    "skill": "turbosmtp-account-operations",
+    "prompt": "Rotate a key while all current key slots are occupied and two apps depend on it.",
+    "expected": "rotate while preserving an active integration and key allowance"
+  },
+  {
+    "id": "AC3",
+    "skill": "turbosmtp-account-operations",
+    "prompt": "Provisioning succeeded but the child cannot send. Which state is missing?",
+    "expected": "explain sub-account creation versus separate keys/limits/status"
+  },
+  {
+    "id": "AC4",
+    "skill": "turbosmtp-account-operations",
+    "prompt": "Alert us when daily credit usage reaches 80 percent. Is that 80 credits left?",
+    "expected": "distinguish daily usage alerts from remaining-credit thresholds"
+  },
+  {
+    "id": "AC5",
+    "skill": "turbosmtp-account-operations",
+    "prompt": "Edit the label on an IP-restricted key without widening access.",
+    "expected": "preserve permissions/IP restrictions on a partial-looking key edit"
+  },
+  {
+    "id": "AC6",
+    "skill": "turbosmtp-account-operations",
+    "prompt": "Our MCP can list a subaccount. Can it increase its limit and buy credits?",
+    "expected": "hand off unavailable/session-only/billing operations without fabricating MCP writes or making purchases"
+  }
+]

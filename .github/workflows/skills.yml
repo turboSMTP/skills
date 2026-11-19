@@ -1,0 +1,16 @@
+name: Package skills
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - run: python3 scripts/package.py dist
+      - run: cd dist && sha256sum --check SHA256SUMS
+      - run: python3 scripts/check.py dist
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: turbosmtp-skills
+          path: dist/

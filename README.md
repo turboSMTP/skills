@@ -1,16 +1,17 @@
-# turboSMTP skills
+# turboSMTP Agent Skills
 
-Specification and publication plan for the official production turboSMTP Agent Skills product.
+Install the skills for the jobs you need. Best practices and template review work from supplied material. Integration, migration and webhook development work in an application repository. Live account actions use a connected turboSMTP MCP client with the appropriate permissions.
 
-**Current status: specification only.** Installable skills, acceptance evidence, release assets and plugins have not been implemented or published. The repository remains private during preparation.
+From a project with read access to this repository:
 
-The required catalog covers ten areas: email best practices, template quality, integration, migration, domain setup, webhooks, explicit sending, delivery diagnosis, list hygiene and account operations. Every skill must meet the same production acceptance requirements.
+```sh
+npx skills add turboSMTP/skills --list
+npx skills add turboSMTP/skills --skill turbosmtp-email-best-practices -a claude-code
+npx skills add turboSMTP/skills --skill turbosmtp-integrate -a codex
+```
 
-- [Product scope and publication](PLAN.md)
-- [Ten skill specifications and concrete cases](docs/CATALOG.md)
-- [Official documentation coverage and capability gaps](docs/DOCUMENTATION-MAP.md)
-- [Production acceptance and evaluation requirements](docs/EVALUATION.md)
+For a checked-out copy, replace the repository name with the checkout path. Select project-local installation unless you need the skills across projects. Use the CLI's `skills check`, `skills update` and `skills remove` commands to manage installed copies.
 
-The skills complement the [turboSMTP MCP server](https://github.com/turboSMTP/mcp), HTTP/SMTP integrations and [developer documentation](https://serversmtp.com/docs). The best-practices and template workflows also work without an account.
+Browse the [ten skill directories](skills/) and their [catalog](docs/CATALOG.md). To build standalone ZIPs with license text and checksums, run `python3 scripts/package.py dist` with an empty output directory. The private CI workflow packages the same files.
 
-Future install commands in the plan describe releases that do not exist yet. Nothing in this repository claims that the current specification itself is a production-ready skill package.
+The collection is in private acceptance. The [60 evaluation prompts](evals/cases.json) specify expected behavior. See [acceptance evidence](docs/ACCEPTANCE.md) for the checks performed and the [release plan](PLAN.md) for the remaining requirements.

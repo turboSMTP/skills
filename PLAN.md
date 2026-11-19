@@ -1,6 +1,6 @@
 # Production Agent Skills specification and publication plan
 
-Status: production product specification, revised 2026-11-18. The required deliverable is a complete, tested ten-skill product with maintainable expertise and working workflows. The repository currently contains the specification, not implemented or certified production-ready skills.
+Status: production product specification, revised 2026-11-18. The required deliverable is a complete, tested ten-skill product with maintainable expertise and working workflows. The ten skill directories are implemented. See [acceptance evidence](docs/ACCEPTANCE.md) for verification status.
 
 ## Product scope
 
@@ -80,7 +80,7 @@ scripts/
   release.yml
 ```
 
-No installable-looking placeholder folders are created by this specification. Author in English and respond to users in their language. References carry the substantive domain expertise: concrete decisions, examples, limitations and verification procedures, not just links saying “read the docs.” Use public primary sources; keep employee policies, private deployment details, credentials and customer data out of distributed material.
+Author in English and respond to users in their language. References carry the substantive domain expertise: concrete decisions, examples, limitations and verification procedures, not just links saying “read the docs.” Use public primary sources; keep employee policies, private deployment details, credentials and customer data out of distributed material.
 
 Maintain shared provider facts from one reviewed source and check consistency across the relevant skills. Each final per-skill artifact must contain every resource it needs with working relative links; do not rely on a file outside its package. Avoid hand-maintained divergent copies. Optional shared authoring/build input must resolve into complete standalone distributions.
 
@@ -130,7 +130,7 @@ Routine ownership includes mailbox-provider requirement changes, source/API drif
 
 ### Private acceptance
 
-Keep the repository private during development and acceptance. Use existing Git/GitHub authentication; never embed credentials in an install URL. Record the tested skills CLI/client versions. The following commands are future acceptance/install examples; the current planning-only tree has no installable skills:
+Keep the repository private during development and acceptance. Use existing Git/GitHub authentication; never embed credentials in an install URL. Record the tested skills CLI/client versions. The version-pinned examples below target a future release candidate. Use the README commands for the current private checkout.
 
 ```sh
 npx skills add turboSMTP/skills --list
