@@ -4,12 +4,16 @@ Give a coding agent instructions for integrating turboSMTP, reviewing email qual
 
 ## Install
 
-From your project directory, list the available skills and choose one to install. Private repository access uses your existing Git credentials.
+From your project directory, run the installer and choose your skills and agents. Access to the private repository uses your existing Git credentials.
 
 ```sh
-npx skills add turboSMTP/skills --list
-npx skills add turboSMTP/skills --skill turbosmtp-email-best-practices -a claude-code
-npx skills add turboSMTP/skills --skill turbosmtp-integrate -a codex
+npx skills add turboSMTP/skills
+```
+
+Optionally select a specific skill with `--skill`:
+
+```sh
+npx skills add turboSMTP/skills --skill turbosmtp-email-best-practices
 ```
 
 To try a checkout, replace `turboSMTP/skills` with its local path. After installation, ask the agent a question such as “Review this receipt email and explain what still works with images disabled.”
